@@ -7,11 +7,6 @@ print(json.dumps(data[0], indent=1))
 
 length = len(data)
 
-for i in range(0, length):
-    print(f"{data[i].get("name_acronym")} - {data[i].get("full_name")} - {data[i].get("team_name")}")
-
-#better Logic:
-"""
 for driver in data:
     print(f"{driver.get('name_acronym')} - {driver.get('full_name')} - {driver.get('team_name')}")
-"""
+
