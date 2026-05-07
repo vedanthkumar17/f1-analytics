@@ -11,10 +11,10 @@ df1 = pd.DataFrame(data1)
 df2 = pd.DataFrame(data2)
 
 df_merge = pd.merge(df1, df2, on = "driver_number")
-print(df_merge.head())
 print(f"Total rows: {len(df_merge)}")
 df_merge.to_csv("merged.csv", index=False)
 
 df_clean = df_merge.dropna(subset = ["pit_duration"])
+print(df_clean.head())
 print(f"Real Pit Stops: {len(df_clean)}")
 df_clean.to_csv("merged.csv", index=False)
