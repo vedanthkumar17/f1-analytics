@@ -18,3 +18,5 @@ df_clean = df_merge.dropna(subset = ["pit_duration"])
 print(df_clean.head())
 print(f"Real Pit Stops: {len(df_clean)}")
 df_clean.to_csv("merged.csv", index=False)
+
+print(df_clean.groupby("full_name").size().sort_values(ascending=False))
