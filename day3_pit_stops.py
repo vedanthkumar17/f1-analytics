@@ -1,7 +1,7 @@
 import requests
 import pandas as pd
 
-response = requests.get("https://api.openf1.org/v1/pit?session_key=9158")
+response = requests.get("https://api.openf1.org/v1/pit?session_key=9693")
 data = response.json()
 
 df = pd.DataFrame(data)
