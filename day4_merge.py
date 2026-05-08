@@ -20,3 +20,5 @@ print(f"Real Pit Stops: {len(df_clean)}")
 df_clean.to_csv("merged.csv", index=False)
 
 print(df_clean.groupby("full_name").size().sort_values(ascending=False))
+fastest = df_clean.nsmallest(1, "pit_duration")[["full_name", "pit_duration"]]
+print(f"Fastest pit stop: {fastest.iloc[0]['full_name']} - {fastest.iloc[0]['pit_duration']} seconds")
