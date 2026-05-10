@@ -5,6 +5,7 @@ cleans and transforms it using Pandas, and analyzes pit stop strategies.
 - Fetches the driver and pit stop data from OpenF1 API
 - Cleans missing data and merges datasets
 - Analyzes pit stop counts per driver
+- Shows the fastest driver in each sector
 ## Tech Stack
 - Python
 - Pandas
