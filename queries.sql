@@ -13,3 +13,10 @@ JOIN drivers d ON p.driver_number = d.driver_number
 WHERE p.stop_duration IS NOT NULL
 GROUP BY d.team_name
 ORDER BY avg_stop ASC;
+
+-- The total number of pit stops for each driver
+SELECT d.full_name, COUNT(*) AS total_stops
+FROM pit_stops p
+JOIN drivers d ON p.driver_number = d.driver_number
+GROUP BY d.full_name
+ORDER BY total_stops DESC;
