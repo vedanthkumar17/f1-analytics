@@ -21,7 +21,8 @@ for _, row in df_drivers.iterrows():
           row['name_acronym'], row['first_name'], row['last_name']))
 
 df_pits = pd.read_csv("pit_stops.csv")
-
+df_pits = df_pits.dropna(subset=["stop_duration"])
+print(f"Loading {len(df_pits)} pit stops with valid stop duration")
 for _, row in df_pits.iterrows():
     cur.execute("""
         INSERT INTO pit_stops (driver_number, lap_number, stop_duration, lane_duration)
