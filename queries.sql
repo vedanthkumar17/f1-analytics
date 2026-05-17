@@ -20,3 +20,10 @@ FROM pit_stops p
 JOIN drivers d ON p.driver_number = d.driver_number
 GROUP BY d.full_name
 ORDER BY total_stops DESC;
+
+-- The fastest lap times for each driver in the 2025 Australian GP
+f1_analytics=# select d.full_name, min(l.lap_duration) as fastest_lap
+from laps l join drivers d on l.driver_number = d.driver_number
+group by d.full_name
+order by fastest_lap asc
+limit 5;
