@@ -77,7 +77,6 @@ python3 analysis.py
 
 ## Planned Improvements
 
-- PostgreSQL integration
 - Apache Airflow orchestration
 - Automated ETL pipeline
 - Interactive dashboard
@@ -93,3 +92,4 @@ This project is part of my hands-on learning in:
 - SQL Analytics
 - API Integration
 - ETL Development
+ 
