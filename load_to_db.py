@@ -35,3 +35,6 @@ cur.close()
 conn.close()
 
 print("Data loaded successfully")
+
+# The ON CONFLICT clause in the drivers insertion ensures that if a driver with the same driver_number already exists, 
+# it will skip inserting that record, preventing duplicates.
