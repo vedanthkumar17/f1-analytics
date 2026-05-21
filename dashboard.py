@@ -1,6 +1,7 @@
 import streamlit as st
 import psycopg2
 import pandas as pd
+import plotly.express as px
 
 conn = psycopg2.connect(
     dbname = "f1_analytics",
@@ -10,6 +11,12 @@ conn = psycopg2.connect(
 )
 st.title("F1 2025 Australian GP Analytics")
 st.divider()
+
+col1, col2, col3 = st.columns(3)
+
+st.metric("Fastest Lap", "Lando Norris - 82.167s")
+st.metric("Fastest Pit Stop", "Charles Leclerc - 2.3s")
+st.metric("Total Pit Stops Analyzed", "34")
 
 st.subheader("Fastest Lap Times")
 df_laps = pd.read_sql(""" 
@@ -22,7 +29,20 @@ df_laps = df_laps.reset_index(drop=True)
 df_laps.index = df_laps.index + 1
 df_laps.index.name = "Rank"
 
+st.subheader("Lap Stop Performance - Visual")
 st.dataframe(df_laps, use_container_width=True)
+
+fig = px.bar(df_laps, x="fastest_laps", y="driver",
+             orientation='h',
+             title="Fastest Lap Times",
+             color="fastest_laps",
+             color_continuous_scale="icefire")
+fig.update_layout(
+    yaxis={'categoryorder':'total ascending'},
+    xaxis_range=[81, df_laps['fastest_laps'].max() + 1]
+)
+st.plotly_chart(fig, use_container_width=True)
+
 
 st.subheader("Pit Stop Performance")
 df_pits = pd.read_sql("""
@@ -36,5 +56,44 @@ df_pits = df_pits.reset_index(drop=True)
 df_pits.index = df_pits.index + 1
 df_pits.index.name = "Rank"
 
+st.subheader("Pit Stop Performance - Visual")
+
 st.dataframe(df_pits, use_container_width=True)
+fig = px.bar(df_pits, x="avg_stops", y="driver",
+             orientation='h',
+             title="Pit Stop Performance",
+             color="avg_stops",
+             color_continuous_scale="icefire")
+fig.update_layout(
+    yaxis={'categoryorder':'total ascending'},
+    xaxis_range=[2, df_pits['avg_stops'].max() + 0.5]
+)
+st.plotly_chart(fig, use_container_width=True)
+
+st.subheader("Average Lap Time Per Team")
+df_avgLapTime = pd.read_sql("""
+    select d.team_name, round(avg(l.lap_duration)::numeric, 2) as avg_lap_time from drivers d
+    join laps l on d.driver_number = l.driver_number
+    group by d.team_name order by avg(l.lap_duration) asc;
+""", conn)
+
+df_avgLapTime = df_avgLapTime.reset_index(drop=True)
+df_avgLapTime.index = df_avgLapTime.index + 1
+df_avgLapTime.index.name = "Rank"
+
+st.subheader("Average Lap Time Per Team - Visual")
+
+st.dataframe(df_avgLapTime, use_container_width=True)
+
+fig = px.bar(df_avgLapTime, x="avg_lap_time", y="team_name",
+             orientation='h',
+             title="Average Lap Time Per Team",
+             color="avg_lap_time",
+             color_continuous_scale="icefire")
+fig.update_layout(
+    yaxis={'categoryorder':'total ascending'},
+    xaxis_range=[81, df_avgLapTime['avg_lap_time'].max() + 1]
+)
+st.plotly_chart(fig, use_container_width=True)
+
 conn.close()
