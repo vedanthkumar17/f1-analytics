@@ -1,2 +1,3 @@
 .idea
 .streamlit/secrets.toml
+upload_to_supabase.py
