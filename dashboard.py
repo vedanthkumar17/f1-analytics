@@ -1,11 +1,10 @@
 import streamlit as st
-import psycopg2
 import pandas as pd
 from sqlalchemy import create_engine
 
 import plotly.express as px
 
-DATABASE_URL = "postgresql://postgres:kAEDg3THNot4EKsT@db.dcoegygevtkzbdjhzumn.supabase.co:5432/postgres"
+DATABASE_URL = st.secrets["DATABASE_URL"]
 engine = create_engine(DATABASE_URL)
 
 st.title("F1 2025 Australian GP Analytics")
