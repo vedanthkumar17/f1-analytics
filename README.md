@@ -4,6 +4,9 @@ An automated data pipeline that fetches live F1 race data from the
 OpenF1 API, loads it into PostgreSQL, and visualizes insights on 
 a Streamlit dashboard.
 
+## Live Dashboard
+[View the dashboard](https://vedanthkumar17-f1-aus-analytics.streamlit.app/)
+
 ## What it does
 - Fetches driver, pit stop and lap time data from OpenF1 API
 - Cleans and transforms data using Python and Pandas
