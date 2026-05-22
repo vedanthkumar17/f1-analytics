@@ -11,11 +11,10 @@ engine = create_engine(DATABASE_URL)
 st.title("F1 2025 Australian GP Analytics")
 st.divider()
 
-col1, col2, col3 = st.columns(3)
 
-col1.metric("Fastest Lap", "Lando Norris - 82.167s")
-col2.metric("Fastest Pit Stop", "Charles Leclerc - 2.3s")
-col3.metric("Total Pit Stops Analyzed", "34")
+st.metric("Fastest Lap", "Lando Norris - 82.167s")
+st.metric("Fastest Pit Stop", "Charles Leclerc - 2.3s")
+st.metric("Total Pit Stops Analyzed", "34")
 
 st.subheader("Fastest Lap Times")
 df_laps = pd.read_sql(""" 
