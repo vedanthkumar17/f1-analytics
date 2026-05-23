@@ -8,8 +8,10 @@ DATABASE_URL = st.secrets["DATABASE_URL"]
 engine = create_engine(DATABASE_URL)
 
 st.title("F1 2025 Australian GP Analytics")
-st.divider()
+st.caption("📍 Albert Park Grand Prix Circuit, Melbourne | March 14-16, 2025")
 
+st.divider()
+st.caption("Data source: OpenF1 API | 2025 Australian GP | Built by Vedanth Kumar")
 
 st.metric("Fastest Lap", "Lando Norris - 82.167s")
 st.metric("Fastest Pit Stop", "Charles Leclerc - 2.3s")
@@ -70,7 +72,7 @@ st.plotly_chart(fig, use_container_width=True)
 st.subheader("Average Lap Time Per Team")
 df_avgLapTime = pd.read_sql("""
     select d.team_name, round(avg(l.lap_duration)::numeric, 2) as avg_lap_time from drivers d
-    join laps l on d.driver_number = l.driver_number
+    join laps l on d.driver_number = l.driver_number WHERE l.lap_duration < 150
     group by d.team_name order by avg(l.lap_duration) asc;
 """, engine)
 
