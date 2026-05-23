@@ -34,7 +34,7 @@ fig = px.bar(df_laps, x="fastest_laps", y="driver",
              orientation='h',
              title="Fastest Lap Times",
              color="fastest_laps",
-             color_continuous_scale="icefire")
+             color_continuous_scale="viridis")
 
 st.subheader("Lap Stop Performance - Visual")
 fig.update_layout(
@@ -61,7 +61,7 @@ fig = px.bar(df_pits, x="avg_stops", y="driver",
              orientation='h',
              title="Pit Stop Performance",
              color="avg_stops",
-             color_continuous_scale="icefire")
+             color_continuous_scale="viridis")
 
 st.subheader("Pit Stop Performance - Visual")
 fig.update_layout(
@@ -87,7 +87,7 @@ fig = px.bar(df_avgLapTime, x="avg_lap_time", y="team_name",
              orientation='h',
              title="Average Lap Time Per Team",
              color="avg_lap_time",
-             color_continuous_scale="icefire")
+             color_continuous_scale="viridis")
 
 st.subheader("Average Lap Time Per Team - Visual")
 fig.update_layout(
