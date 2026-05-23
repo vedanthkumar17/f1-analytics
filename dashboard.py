@@ -28,7 +28,6 @@ df_laps = df_laps.reset_index(drop=True)
 df_laps.index = df_laps.index + 1
 df_laps.index.name = "Rank"
 
-st.subheader("Lap Stop Performance - Visual")
 st.dataframe(df_laps, use_container_width=True)
 
 fig = px.bar(df_laps, x="fastest_laps", y="driver",
@@ -36,6 +35,8 @@ fig = px.bar(df_laps, x="fastest_laps", y="driver",
              title="Fastest Lap Times",
              color="fastest_laps",
              color_continuous_scale="icefire")
+
+st.subheader("Lap Stop Performance - Visual")
 fig.update_layout(
     yaxis={'categoryorder':'total ascending'},
     xaxis_range=[81, df_laps['fastest_laps'].max() + 1]
@@ -55,14 +56,14 @@ df_pits = df_pits.reset_index(drop=True)
 df_pits.index = df_pits.index + 1
 df_pits.index.name = "Rank"
 
-st.subheader("Pit Stop Performance - Visual")
-
 st.dataframe(df_pits, use_container_width=True)
 fig = px.bar(df_pits, x="avg_stops", y="driver",
              orientation='h',
              title="Pit Stop Performance",
              color="avg_stops",
              color_continuous_scale="icefire")
+
+st.subheader("Pit Stop Performance - Visual")
 fig.update_layout(
     yaxis={'categoryorder':'total ascending'},
     xaxis_range=[2, df_pits['avg_stops'].max() + 0.5]
@@ -80,8 +81,6 @@ df_avgLapTime = df_avgLapTime.reset_index(drop=True)
 df_avgLapTime.index = df_avgLapTime.index + 1
 df_avgLapTime.index.name = "Rank"
 
-st.subheader("Average Lap Time Per Team - Visual")
-
 st.dataframe(df_avgLapTime, use_container_width=True)
 
 fig = px.bar(df_avgLapTime, x="avg_lap_time", y="team_name",
@@ -89,6 +88,8 @@ fig = px.bar(df_avgLapTime, x="avg_lap_time", y="team_name",
              title="Average Lap Time Per Team",
              color="avg_lap_time",
              color_continuous_scale="icefire")
+
+st.subheader("Average Lap Time Per Team - Visual")
 fig.update_layout(
     yaxis={'categoryorder':'total ascending'},
     xaxis_range=[81, df_avgLapTime['avg_lap_time'].max() + 1]
