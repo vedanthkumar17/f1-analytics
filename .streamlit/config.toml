@@ -3,3 +3,9 @@ primaryColor = "#E80020"
 backgroundColor = "#000000"
 secondaryBackgroundColor = "#000000"
 textColor = "#ffffff"
+
+[ui]
+hideTopBar = false
+
+[browser]
+gatherUsageStats = false

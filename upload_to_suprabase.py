@@ -3,7 +3,7 @@ from sqlalchemy import create_engine
 import requests
 import psycopg2
 
-DATABASE_URL = "postgresql://postgres:kAEDg3THNot4EKsT@db.dcoegygevtkzbdjhzumn.supabase.co:5432/postgres"
+DATABASE_URL = "postgresql://postgres.dcoegygevtkzbdjhzumn:F1analytics2025@aws-1-ap-south-1.pooler.supabase.com:6543/postgres"
 
 engine = create_engine(DATABASE_URL)
 
