@@ -62,7 +62,6 @@ fig.update_layout(
 )
 st.plotly_chart(fig, use_container_width=True)
 
-
 df_pit_avg = df_pits_merged.groupby("full_name")["stop_duration"].mean().round(2).reset_index()
 df_pit_avg.columns = ["driver", "avg_stop"]
 df_pit_avg = df_pit_avg.sort_values("avg_stop").reset_index(drop=True)
@@ -102,4 +101,5 @@ fig.update_layout(
     yaxis={'categoryorder':'total ascending'},
     xaxis_range=[df_team_laps["avg_lap_time"].min() - 1, df_team_laps["avg_lap_time"].max() + 1]
 )
+
 st.plotly_chart(fig, use_container_width=True)
