@@ -8,6 +8,9 @@ st.title("F1 2025 Race Analytics")
 st.divider()
 
 season_races = get_season_races()
+if not season_races:
+    st.error("Failed to load race data. Please try again.")
+    st.stop()
 
 selected_race = st.selectbox("Select Race", list(season_races.keys()))
 session_key = season_races[selected_race]
@@ -15,14 +18,15 @@ session_key = season_races[selected_race]
 st.caption(f"Data source: OpenF1 API | {selected_race} | Built by Vedanth Kumar")
 
 df_drivers = get_drivers(session_key)
+if df_drivers.empty:
+    st.warning("No data available for this race yet.")
+    st.stop()
 
 df_laps_raw = get_laps(session_key)
 
 df_pits_raw = get_pit_stops(session_key)
 
-
 df_laps_merged = pd.merge(df_laps_raw, df_drivers[["driver_number", "full_name", "team_name"]], on="driver_number")
-
 
 df_pits_merged = pd.merge(df_pits_raw, df_drivers[["driver_number", "full_name", "team_name"]], on="driver_number")
 
