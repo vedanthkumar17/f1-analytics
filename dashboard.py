@@ -1,97 +1,115 @@
 import streamlit as st
 import pandas as pd
-from sqlalchemy import create_engine
-
+import requests
 import plotly.express as px
 
-DATABASE_URL = st.secrets["DATABASE_URL"]
-engine = create_engine(DATABASE_URL)
-
-st.title("F1 2025 Australian GP Analytics")
-st.caption("📍 Albert Park Grand Prix Circuit, Melbourne | March 14-16, 2025")
-
+st.title("F1 2025 Race Analytics")
 st.divider()
-st.caption("Data source: OpenF1 API | 2025 Australian GP | Built by Vedanth Kumar")
 
-st.metric("Fastest Lap", "Lando Norris - 82.167s")
-st.metric("Fastest Pit Stop", "Charles Leclerc - 2.3s")
-st.metric("Total Pit Stops Analyzed", "34")
+
+season_races = {
+    "2025 Australian GP": 9693,
+    "2025 Chinese GP": 9998,
+    "2025 Japanese GP": 10006
+}
+
+selected_race = st.selectbox("Select Race", list(season_races.keys()))
+session_key = season_races[selected_race]
+
+st.caption(f"Data source: OpenF1 API | {selected_race} | Built by Vedanth Kumar")
+
+
+drivers_response = requests.get(f"https://api.openf1.org/v1/drivers?session_key={session_key}")
+df_drivers = pd.DataFrame(drivers_response.json())
+
+
+laps_response = requests.get(f"https://api.openf1.org/v1/laps?session_key={session_key}")
+df_laps_raw = pd.DataFrame(laps_response.json())
+df_laps_raw = df_laps_raw.dropna(subset=["duration_sector_1", "duration_sector_2", "duration_sector_3", "lap_duration"])
+df_laps_raw = df_laps_raw[df_laps_raw["is_pit_out_lap"] == False]
+df_laps_raw = df_laps_raw[df_laps_raw["lap_duration"] < 150]
+
+
+pits_response = requests.get(f"https://api.openf1.org/v1/pit?session_key={session_key}")
+df_pits_raw = pd.DataFrame(pits_response.json())
+df_pits_raw = df_pits_raw.dropna(subset=["stop_duration"])
+
+
+df_laps_merged = pd.merge(df_laps_raw, df_drivers[["driver_number", "full_name", "team_name"]], on="driver_number")
+
+
+df_pits_merged = pd.merge(df_pits_raw, df_drivers[["driver_number", "full_name", "team_name"]], on="driver_number")
+
+
+df_fastest_laps = df_laps_merged.groupby("full_name")["lap_duration"].min().reset_index()
+df_fastest_laps.columns = ["driver", "fastest_lap"]
+df_fastest_laps = df_fastest_laps.sort_values("fastest_lap").reset_index(drop=True)
+df_fastest_laps.index += 1
+df_fastest_laps.index.name = "Rank"
+
+
+fastest_driver = df_fastest_laps.iloc[0]["driver"]
+fastest_time = df_fastest_laps.iloc[0]["fastest_lap"]
+fastest_pit = df_pits_merged.loc[df_pits_merged["stop_duration"].idxmin()]
+
+col1, col2, col3 = st.columns(3)
+col1.metric("Fastest Lap", f"{fastest_driver}")
+col2.metric("Fastest Lap Time", f"{fastest_time:.3f}s")
+col3.metric("Fastest Pit Stop", f"{fastest_pit['full_name']} - {fastest_pit['stop_duration']}s")
+
 
 st.subheader("Fastest Lap Times")
-df_laps = pd.read_sql(""" 
-    select d.full_name as Driver, min(l.lap_duration) as fastest_laps from laps l
-    join drivers d on l.driver_number = d.driver_number
-    group by d.full_name order by fastest_laps asc;
-""", engine)
+st.dataframe(df_fastest_laps, use_container_width=True)
 
-df_laps = df_laps.reset_index(drop=True)
-df_laps.index = df_laps.index + 1
-df_laps.index.name = "Rank"
-
-st.dataframe(df_laps, use_container_width=True)
-
-fig = px.bar(df_laps, x="fastest_laps", y="driver",
+fig = px.bar(df_fastest_laps, x="fastest_lap", y="driver",
              orientation='h',
              title="Fastest Lap Times",
-             color="fastest_laps",
+             color="fastest_lap",
              color_continuous_scale="viridis")
-
-st.subheader("Lap Stop Performance - Visual")
 fig.update_layout(
     yaxis={'categoryorder':'total ascending'},
-    xaxis_range=[81, df_laps['fastest_laps'].max() + 1]
+    xaxis_range=[df_fastest_laps["fastest_lap"].min() - 1, df_fastest_laps["fastest_lap"].max() + 1]
 )
 st.plotly_chart(fig, use_container_width=True)
 
+
+df_pit_avg = df_pits_merged.groupby("full_name")["stop_duration"].mean().round(2).reset_index()
+df_pit_avg.columns = ["driver", "avg_stop"]
+df_pit_avg = df_pit_avg.sort_values("avg_stop").reset_index(drop=True)
+df_pit_avg.index += 1
+df_pit_avg.index.name = "Rank"
 
 st.subheader("Pit Stop Performance")
-df_pits = pd.read_sql("""
-    select d.full_name as driver, round(avg(p.stop_duration)::numeric, 2) as avg_stops
-    from pit_stops p
-    join drivers d on p.driver_number = d.driver_number
-    group by d.full_name order by avg_stops asc;
-""", engine)
+st.dataframe(df_pit_avg, use_container_width=True)
 
-df_pits = df_pits.reset_index(drop=True)
-df_pits.index = df_pits.index + 1
-df_pits.index.name = "Rank"
-
-st.dataframe(df_pits, use_container_width=True)
-fig = px.bar(df_pits, x="avg_stops", y="driver",
+fig = px.bar(df_pit_avg, x="avg_stop", y="driver",
              orientation='h',
-             title="Pit Stop Performance",
-             color="avg_stops",
+             title="Average Pit Stop Duration",
+             color="avg_stop",
              color_continuous_scale="viridis")
-
-st.subheader("Pit Stop Performance - Visual")
 fig.update_layout(
     yaxis={'categoryorder':'total ascending'},
-    xaxis_range=[2, df_pits['avg_stops'].max() + 0.5]
+    xaxis_range=[df_pit_avg["avg_stop"].min() - 0.5, df_pit_avg["avg_stop"].max() + 0.5]
 )
 st.plotly_chart(fig, use_container_width=True)
 
+
+df_team_laps = df_laps_merged.groupby("team_name")["lap_duration"].mean().round(2).reset_index()
+df_team_laps.columns = ["team", "avg_lap_time"]
+df_team_laps = df_team_laps.sort_values("avg_lap_time").reset_index(drop=True)
+df_team_laps.index += 1
+df_team_laps.index.name = "Rank"
+
 st.subheader("Average Lap Time Per Team")
-df_avgLapTime = pd.read_sql("""
-    select d.team_name, round(avg(l.lap_duration)::numeric, 2) as avg_lap_time from drivers d
-    join laps l on d.driver_number = l.driver_number WHERE l.lap_duration < 150
-    group by d.team_name order by avg(l.lap_duration) asc;
-""", engine)
+st.dataframe(df_team_laps, use_container_width=True)
 
-df_avgLapTime = df_avgLapTime.reset_index(drop=True)
-df_avgLapTime.index = df_avgLapTime.index + 1
-df_avgLapTime.index.name = "Rank"
-
-st.dataframe(df_avgLapTime, use_container_width=True)
-
-fig = px.bar(df_avgLapTime, x="avg_lap_time", y="team_name",
+fig = px.bar(df_team_laps, x="avg_lap_time", y="team",
              orientation='h',
              title="Average Lap Time Per Team",
              color="avg_lap_time",
              color_continuous_scale="viridis")
-
-st.subheader("Average Lap Time Per Team - Visual")
 fig.update_layout(
     yaxis={'categoryorder':'total ascending'},
-    xaxis_range=[81, df_avgLapTime['avg_lap_time'].max() + 1]
+    xaxis_range=[df_team_laps["avg_lap_time"].min() - 1, df_team_laps["avg_lap_time"].max() + 1]
 )
 st.plotly_chart(fig, use_container_width=True)
