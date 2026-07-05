@@ -2,37 +2,23 @@ import streamlit as st
 import pandas as pd
 import requests
 import plotly.express as px
+from data import get_season_races, get_drivers, get_laps, get_pit_stops
 
 st.title("F1 2025 Race Analytics")
 st.divider()
 
-
-season_races = {
-    "2025 Australian GP": 9693,
-    "2025 Chinese GP": 9998,
-    "2025 Japanese GP": 10006
-}
+season_races = get_season_races()
 
 selected_race = st.selectbox("Select Race", list(season_races.keys()))
 session_key = season_races[selected_race]
 
 st.caption(f"Data source: OpenF1 API | {selected_race} | Built by Vedanth Kumar")
 
+df_drivers = get_drivers(session_key)
 
-drivers_response = requests.get(f"https://api.openf1.org/v1/drivers?session_key={session_key}")
-df_drivers = pd.DataFrame(drivers_response.json())
+df_laps_raw = get_laps(session_key)
 
-
-laps_response = requests.get(f"https://api.openf1.org/v1/laps?session_key={session_key}")
-df_laps_raw = pd.DataFrame(laps_response.json())
-df_laps_raw = df_laps_raw.dropna(subset=["duration_sector_1", "duration_sector_2", "duration_sector_3", "lap_duration"])
-df_laps_raw = df_laps_raw[df_laps_raw["is_pit_out_lap"] == False]
-df_laps_raw = df_laps_raw[df_laps_raw["lap_duration"] < 150]
-
-
-pits_response = requests.get(f"https://api.openf1.org/v1/pit?session_key={session_key}")
-df_pits_raw = pd.DataFrame(pits_response.json())
-df_pits_raw = df_pits_raw.dropna(subset=["stop_duration"])
+df_pits_raw = get_pit_stops(session_key)
 
 
 df_laps_merged = pd.merge(df_laps_raw, df_drivers[["driver_number", "full_name", "team_name"]], on="driver_number")
