@@ -1,36 +1,97 @@
-# F1 Analytics Pipeline
+# 🏎️ F1 2025 Race Analytics Dashboard
 
-An automated data pipeline that fetches live F1 race data from the 
-OpenF1 API, loads it into PostgreSQL, and visualizes insights on 
-a Streamlit dashboard.
+An interactive Formula 1 analytics dashboard that provides race insights for all **24 races** of the 2025 season using the OpenF1 API.
 
-## Live Dashboard
-[View the dashboard](https://vedanthkumar17-f1-aus-analytics.streamlit.app/)
+Built with Streamlit, Pandas, and Plotly, the dashboard enables users to explore race statistics through interactive visualizations and performance metrics.
 
-## What it does
-- Fetches driver, pit stop and lap time data from OpenF1 API
-- Cleans and transforms data using Python and Pandas
-- Loads structured data into PostgreSQL database
-- Visualizes race insights on an interactive Streamlit dashboard
+---
 
-## Tech Stack
-- Python, Pandas
-- PostgreSQL, psycopg2
-- Streamlit, Plotly
+## 🌐 Live Dashboard
+
+https://vedanthkumar17-f1-analytics.streamlit.app/
+
+---
+
+## ✨ Features
+
+- 🏁 Fastest lap and driver details for every race
+- ⏱️ Fastest pit stop of each Grand Prix
+- 📊 Average pit stop time by driver
+- 🏎️ Average pit stop time by team
+- 📈 Interactive Plotly visualizations
+- 🔄 Race selection across all 24 Formula 1 2025 events
+- ⚡ Cached API responses for improved performance
+
+---
+
+## 🛠️ Tech Stack
+
+- Streamlit
+- Pandas
+- Plotly
+- Requests
 - OpenF1 API
 
-## Project Structure
-(put your actual files here)
+---
 
-## How to Run
-(actual commands that work right now)
+## 📁 Project Structure
 
-## Key Insights — 2025 Australian GP
-- Fastest lap: Lando Norris — 82.167s
-- Fastest pit stop: Charles Leclerc — 2.3s
-- Most pit stops: Multiple drivers — 5 stops each
+```
+F1-Analytics/
+│
+├── app.py
+├── requirements.txt
+├── utils.py
+├── assets/
+└── README.md
+```
 
-## Planned
-- Apache Airflow automation
-- Historical multi-race analysis
-- Deploy to Streamlit Cloud
+*(Update the structure above to match your repository.)*
+
+---
+
+## 🚀 Running Locally
+
+```bash
+git clone <your-repository-url>
+
+cd F1-Analytics
+
+pip install -r requirements.txt
+
+streamlit run app.py
+```
+
+---
+
+## 📊 Dashboard Highlights
+
+For every race, the dashboard provides:
+
+- Fastest lap information
+- Driver leaderboard
+- Fastest pit stop
+- Average pit stop time by driver
+- Average pit stop time by team
+- Average lap time by team
+- Interactive charts for performance comparison
+
+---
+
+## 💡 What I Learned
+
+- Working with REST APIs
+- Processing real-world motorsport data using Pandas
+- Building interactive dashboards with Streamlit
+- Creating visualizations using Plotly
+- Implementing caching to improve application performance
+- Handling API rate limits gracefully
+
+---
+
+## 🔮 Future Improvements
+
+- Historical season comparisons
+- Driver performance trends across races
+- Qualifying and sprint race analysis
+- Additional interactive analytics
