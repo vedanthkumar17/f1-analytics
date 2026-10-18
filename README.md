@@ -109,11 +109,3 @@ streamlit run dashboard.py
 ```
 
 For deployment, set `DATABASE_URL` in `.streamlit/secrets.toml` instead of `.env`.
-
-## What I'd Improve Next
-
-- Update the dashboard caption, which still reads "Data source: OpenF1 API".
-- Add automated tests for `ingest.py` and the SQL views.
-- Add a scheduled job (e.g. cron or GitHub Actions) to refresh the data.
-- Support additional seasons and session types beyond 2025 Races.
-- Expand the dashboard with the existing `sql/views.sql` analytics.
