@@ -2,6 +2,7 @@ streamlit
 pandas
 sqlalchemy
 psycopg[binary]
+psycopg2-binary
 plotly
 requests
 python-dotenv
