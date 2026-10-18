@@ -1,4 +1,14 @@
-.idea
+# Secrets
+.env
 .streamlit/secrets.toml
-upload_to_supabase.py
+
+# Python
 __pycache__/
+*.pyc
+venv/
+.venv/
+
+# Editors / OS
+.idea/
+.vscode/
+.DS_Store
